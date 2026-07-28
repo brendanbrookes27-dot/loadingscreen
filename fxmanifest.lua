@@ -11,5 +11,6 @@ files {
     'web/index.html',
     'web/css/style.css',
     'web/js/app.js',
-    'web/assets/logo.png'
+    'web/assets/logo.png',
+    'web/assets/background.mp4'
 }

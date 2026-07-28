@@ -46,6 +46,20 @@ body {
    BG & SCENE EFFECTS
    ========================================== */
 
+/* Fullscreen background video */
+.bg-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+    z-index: 0;
+}
+
 /* Dark outback atmosphere with orange-gold radial glow */
 .cyber-overlay {
     background: radial-gradient(circle at 50% 50%, rgba(20, 10, 5, 0.6) 0%, rgba(5, 5, 5, 0.95) 100%);

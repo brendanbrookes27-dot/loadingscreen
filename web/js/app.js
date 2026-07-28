@@ -14,6 +14,7 @@ let simulatedInterval;
 // Select Dom elements
 const initOverlay = document.getElementById('init-overlay');
 const initBtn = document.getElementById('init-btn');
+const bgVideo = document.getElementById('bg-video');
 const hudContainer = document.getElementById('hud-container');
 const currentTimeEl = document.getElementById('current-time');
 const terminalConsole = document.getElementById('terminal-console');
@@ -79,6 +80,11 @@ initBtn.addEventListener('click', () => {
         initOverlay.style.display = 'none';
         hudContainer.classList.remove('hidden');
     }, 800);
+
+    // Ensure local background video is playing
+    if (bgVideo && typeof bgVideo.play === 'function') {
+        bgVideo.play().catch(err => console.log('Video play error:', err));
+    }
 
     // Play YT music if loaded
     if (ytPlayer && typeof ytPlayer.playVideo === 'function') {
