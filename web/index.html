@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hard Yakka Chronicles - Loading Screen</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Google Fonts for Cyberpunk typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Background overlay / Scanlines / Cyberpunk Grid -->
+    <div class="cyber-overlay"></div>
+    <div class="scanlines"></div>
+    <div class="grid-bg"></div>
+
+    <!-- Hidden YouTube Player Container -->
+    <div id="youtube-player" style="display: none;"></div>
+
+    <!-- Audio Autoplay Bypasser/Init Overlay -->
+    <div id="init-overlay" class="init-overlay">
+        <div class="init-box">
+            <div class="glitch-text" data-text="SYSTEM OFFLINE">SYSTEM OFFLINE</div>
+            <p class="init-subtitle">HARD YAKKA RECRUITMENT NODE v1.02</p>
+            <div class="init-bracket-container">
+                <button id="init-btn" class="cyber-btn">
+                    <span class="btn-text">INITIALIZE NEURAL LINK</span>
+                    <span class="btn-glitch-border"></span>
+                </button>
+            </div>
+            <div class="init-status-scroller">
+                <span class="scroller-line">> INITIALIZING HOST CONNECTION...</span>
+                <span class="scroller-line">> ESTABLISHING SECURE PROTOCOLS...</span>
+                <span class="scroller-line">> RETRIEVING ENCRYPTED DATA...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main HUD Container -->
+    <div class="hud-container hidden" id="hud-container">
+        <!-- HEADER -->
+        <header class="hud-header">
+            <div class="header-left">
+                <div class="sys-code">HYC_SYS_NODE: //SECURE_LINK_09</div>
+                <h1 class="server-title neon-text">HARD YAKKA<br><span class="accent-text">CHRONICLES</span></h1>
+            </div>
+            <div class="header-right">
+                <div class="header-info-box">
+                    <span class="info-label">STATUS</span>
+                    <span class="info-value text-green status-blink">ONLINE</span>
+                </div>
+                <div class="header-info-box">
+                    <span class="info-label">ZONE</span>
+                    <span class="info-value text-orange">OUTBACK_S4</span>
+                </div>
+                <div class="header-info-box">
+                    <span class="info-label">NODE_TIME</span>
+                    <span id="current-time" class="info-value">00:00:00</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN LAYOUT -->
+        <main class="hud-main">
+            <!-- LEFT PANEL: Logo & Audio Controls -->
+            <section class="hud-panel left-panel">
+                <div class="panel-header">
+                    <span class="panel-num">[01]</span> IDENT_MODULE
+                </div>
+                <div class="panel-body flex-center flex-column">
+                    <div class="logo-container">
+                        <img src="assets/logo.png" alt="Hard Yakka Chronicles Logo" class="server-logo">
+                        <div class="logo-scan-line"></div>
+                    </div>
+
+                    <!-- Audio Controls Widget -->
+                    <div class="audio-widget cyber-panel">
+                        <div class="widget-title">DECK_AUDIO_TUNER</div>
+                        <div class="audio-meta">
+                            <span class="audio-icon">⚡</span>
+                            <span class="audio-track-title">Janji - Heroes Tonight (feat. Johnning)</span>
+                        </div>
+                        <div class="visualizer-container">
+                            <div class="vis-bar"></div>
+                            <div class="vis-bar"></div>
+                            <div class="vis-bar"></div>
+                            <div class="vis-bar"></div>
+                            <div class="vis-bar"></div>
+                            <div class="vis-bar"></div>
+                            <div class="vis-bar"></div>
+                            <div class="vis-bar"></div>
+                            <div class="vis-bar"></div>
+                            <div class="vis-bar"></div>
+                            <div class="vis-bar"></div>
+                            <div class="vis-bar"></div>
+                            <div class="vis-bar"></div>
+                            <div class="vis-bar"></div>
+                            <div class="vis-bar"></div>
+                        </div>
+                        <div class="audio-controls">
+                            <button id="audio-play-pause" class="audio-btn" title="Play/Pause">
+                                <!-- Pause Icon as Default -->
+                                <svg class="btn-svg" viewBox="0 0 24 24" id="play-pause-icon">
+                                    <path fill="currentColor" d="M14,19H18V5H14M6,19H10V5H6V19Z" />
+                                </svg>
+                            </button>
+                            <button id="audio-mute" class="audio-btn" title="Mute/Unmute">
+                                <svg class="btn-svg" viewBox="0 0 24 24" id="mute-icon">
+                                    <path fill="currentColor" d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.85 14,18.71V20.77C18.03,19.86 21,16.28 21,12C21,7.72 18.03,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.77 16.5,12M3,9V15H7L12,20V4L7,9H3Z" />
+                                </svg>
+                            </button>
+                            <div class="volume-slider-container">
+                                <span class="vol-label">VOL</span>
+                                <input type="range" id="volume-range" class="volume-slider" min="0" max="100" value="50">
+                                <span id="vol-pct" class="vol-pct">50%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MIDDLE PANEL: Interactive Tabbed Content -->
+            <section class="hud-panel middle-panel">
+                <div class="panel-header">
+                    <span class="panel-num">[02]</span> SYSTEM_INFO_DATABASE
+                </div>
+                <div class="panel-body">
+                    <!-- Tab Navigation -->
+                    <div class="tab-nav">
+                        <button class="tab-btn active" data-tab="lore">
+                            <span class="tab-btn-num">01/</span> CORE_LORE
+                        </button>
+                        <button class="tab-btn" data-tab="rules">
+                            <span class="tab-btn-num">02/</span> SEC_RULES
+                        </button>
+                        <button class="tab-btn" data-tab="features">
+                            <span class="tab-btn-num">03/</span> TECH_DECK
+                        </button>
+                    </div>
+
+                    <!-- Tab Content Areas -->
+                    <div class="tab-content-wrapper">
+                        <!-- Tab 1: Lore -->
+                        <div class="tab-content active" id="tab-lore">
+                            <h3 class="tab-title">GRID LOG: //HARD_YAKKA</h3>
+                            <div class="cyber-divider"></div>
+                            <div class="lore-body">
+                                <p class="accent-paragraph">
+                                    "Out here in the red dirt and neon hum, there are no hand-outs. The outback doesn't care about your neural implants, and the syndicates sure as hell don't care about your soul. It's Hard Yakka, mate. You work, you bleed, or you get recycled into the grid."
+                                </p>
+                                <p>
+                                    Welcome to the high-octane frontier of **Hard Yakka Chronicles**. Nestled in a gritty, high-contrast future of the Australian outback, industrial mining corporations clash with underground neon syndicates.
+                                </p>
+                                <p>
+                                    Whether you are running raw minerals from automated dig-sites, repairing heavy cybersecurity rigs in the dusty outposts, or enforcing corporate cyber-law in the neon-lit alleyways, every action defines your survival. Load up, hook in, and earn your place among the outback legends.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Tab 2: Rules -->
+                        <div class="tab-content" id="tab-rules">
+                            <h3 class="tab-title">SECURITY PROTOCOLS: //SERVER_RULES</h3>
+                            <div class="cyber-divider"></div>
+                            <div class="rules-list">
+                                <div class="rule-item">
+                                    <div class="rule-header">
+                                        <span class="rule-num">SEC_01:</span>
+                                        <span class="rule-title">ROLEPLAY INTEGRITY (NVL / FRP)</span>
+                                    </div>
+                                    <p class="rule-desc">Value your life as a cyber-citizen. Fear dangerous situations and maintain realistic fear-responses (No Value Life). Fail roleplay is strictly prohibited.</p>
+                                </div>
+                                <div class="rule-item">
+                                    <div class="rule-header">
+                                        <span class="rule-num">SEC_02:</span>
+                                        <span class="rule-title">METAGAMING & POWERGAMING</span>
+                                    </div>
+                                    <p class="rule-desc">Do not utilize external matrix-comms or out-of-character telemetry inside your active character neural network. Powergaming (unrealistic actions) is forbidden.</p>
+                                </div>
+                                <div class="rule-item">
+                                    <div class="rule-header">
+                                        <span class="rule-num">SEC_03:</span>
+                                        <span class="rule-title">OUTBACK HOSTILITY LIMITS</span>
+                                    </div>
+                                    <p class="rule-desc">Hostile encounters, robbery, and corp raids require clear roleplay leading up to the breach. RDM (Random Deathmatch) will result in a neural-net ban.</p>
+                                </div>
+                                <div class="rule-item">
+                                    <div class="rule-header">
+                                        <span class="rule-num">SEC_04:</span>
+                                        <span class="rule-title">MUTUAL RESPECT & CODE OF CONDUCT</span>
+                                    </div>
+                                    <p class="rule-desc">Harassment, discrimination, or abusive behavioral streams outside standard IC conflicts will lead to direct termination from the project.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tab 3: Features -->
+                        <div class="tab-content" id="tab-features">
+                            <h3 class="tab-title">TECH DECK: //SERVER_FEATURES</h3>
+                            <div class="cyber-divider"></div>
+                            <div class="features-grid">
+                                <div class="feature-card">
+                                    <div class="feature-icon">⚙️</div>
+                                    <div class="feature-info">
+                                        <h4 class="feature-title">Qbox Infrastructure</h4>
+                                        <p class="feature-text">High-performance, modern framework designed for ultra-smooth gameplay streams and high server tick rates.</p>
+                                    </div>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon">⛏️</div>
+                                    <div class="feature-info">
+                                        <h4 class="feature-title">Outback Industrial Jobs</h4>
+                                        <p class="feature-text">Dig raw cyber-ores, run automated scrap yards, or craft legendary tier items via custom mechanics.</p>
+                                    </div>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon">🚔</div>
+                                    <div class="feature-info">
+                                        <h4 class="feature-title">Advanced Cyberpolice & EMS</h4>
+                                        <p class="feature-text">Equipped with futuristic patrol cruisers, high-fidelity medical nanite tech, and tactical radar.</p>
+                                    </div>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon">💵</div>
+                                    <div class="feature-info">
+                                        <h4 class="feature-title">Adaptive Crypto-Economy</h4>
+                                        <p class="feature-text">Realistic job wages, player-run black markets, and corporate stock indices updating live on the grid.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RIGHT PANEL: Scrolling Terminal Console -->
+            <section class="hud-panel right-panel">
+                <div class="panel-header">
+                    <span class="panel-num">[03]</span> TERMINAL_DIAGNOSTIC
+                </div>
+                <div class="panel-body flex-column">
+                    <div id="terminal-console" class="terminal-console">
+                        <!-- Terminal lines will print dynamically -->
+                    </div>
+                    <div class="terminal-footer">
+                        <span class="terminal-cursor">█</span>
+                        <span class="terminal-status">LISTENING ON PORT_442...</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- FOOTER: Progress Bar & Loaded Stats -->
+        <footer class="hud-footer">
+            <div class="footer-meta">
+                <div class="load-stage-info">
+                    <span id="load-stage">INITIALIZING CORE_LINK...</span>
+                    <span class="load-file" id="load-file">modules/system_init.cfg</span>
+                </div>
+                <div id="load-percentage" class="load-percentage">0%</div>
+            </div>
+
+            <!-- Progress Bar Outer Container -->
+            <div class="progress-bar-container">
+                <div class="progress-bar-border">
+                    <div class="progress-bar-fill" id="progress-bar-fill" style="width: 0%;"></div>
+                </div>
+                <!-- Custom Grid Gridticks below progress bar -->
+                <div class="progress-ticks">
+                    <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- YouTube IFrame API Script -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
