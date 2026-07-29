@@ -12,5 +12,6 @@ files {
     'web/css/style.css',
     'web/js/app.js',
     'web/assets/logo.png',
-    'web/assets/background.mp4'
+    'web/assets/background.jpg',
+    'web/assets/music.mp3'
 }

@@ -11,18 +11,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Video background element -->
-    <video id="bg-video" class="bg-video" autoplay loop muted playsinline>
-        <source src="assets/background.mp4" type="video/mp4">
-    </video>
+    <!-- Background image element with Ken Burns animation -->
+    <div id="bg-image" class="bg-image"></div>
 
     <!-- Background overlay / Scanlines / Cyberpunk Grid -->
     <div class="cyber-overlay"></div>
     <div class="scanlines"></div>
     <div class="grid-bg"></div>
 
-    <!-- Hidden YouTube Player Container -->
-    <div id="youtube-player" style="display: none;"></div>
+    <!-- Local HTML5 Audio Element -->
+    <audio id="local-audio" src="assets/music.mp3" loop></audio>
 
     <!-- Audio Autoplay Bypasser/Init Overlay -->
     <div id="init-overlay" class="init-overlay">
@@ -280,8 +278,6 @@
         </footer>
     </div>
 
-    <!-- YouTube IFrame API Script -->
-    <script src="https://www.youtube.com/iframe_api"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

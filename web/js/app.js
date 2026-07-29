@@ -1,20 +1,20 @@
 /* ==========================================
    CYBERPUNK OUTBACK HUD CONTROLLER (JS)
    Server: Hard Yakka Chronicles
-   Autoplay: Yes (Janji - Heroes Tonight: 3nQNiWdeH2Q)
+   Music Track: Janji - Heroes Tonight (MP3)
    ========================================== */
 
-let ytPlayer;
 let isMuted = false;
 let isPlaying = false;
 let terminalLines = [];
 let progress = 0;
 let simulatedInterval;
 
-// Select Dom elements
+// Select DOM elements
 const initOverlay = document.getElementById('init-overlay');
 const initBtn = document.getElementById('init-btn');
-const bgVideo = document.getElementById('bg-video');
+const bgImage = document.getElementById('bg-image');
+const localAudio = document.getElementById('local-audio');
 const hudContainer = document.getElementById('hud-container');
 const currentTimeEl = document.getElementById('current-time');
 const terminalConsole = document.getElementById('terminal-console');
@@ -32,47 +32,12 @@ const volumeRange = document.getElementById('volume-range');
 const volPctEl = document.getElementById('vol-pct');
 const visualizerBars = document.querySelectorAll('.vis-bar');
 
-// 1. YouTube IFrame API Callback
-function onYouTubeIframeAPIReady() {
-    ytPlayer = new YT.Player('youtube-player', {
-        height: '0',
-        width: '0',
-        videoId: '3nQNiWdeH2Q',
-        playerVars: {
-            'autoplay': 1,
-            'controls': 0,
-            'disablekb': 1,
-            'fs': 0,
-            'rel': 0,
-            'showinfo': 0,
-            'modestbranding': 1,
-            'loop': 1,
-            'playlist': '3nQNiWdeH2Q'
-        },
-        events: {
-            'onReady': onPlayerReady,
-            'onStateChange': onPlayerStateChange
-        }
-    });
+// Set default volume
+if (localAudio) {
+    localAudio.volume = 0.5;
 }
 
-function onPlayerReady(event) {
-    ytPlayer.setVolume(50);
-}
-
-function onPlayerStateChange(event) {
-    if (event.data === YT.PlayerState.PLAYING) {
-        isPlaying = true;
-        updatePlayPauseButton();
-        startVisualizer();
-    } else {
-        isPlaying = false;
-        updatePlayPauseButton();
-        stopVisualizer();
-    }
-}
-
-// 2. Setup System Boot and Audio initialization on clicking "INITIALIZE NEURAL LINK"
+// 1. Setup System Boot and Audio initialization on clicking "INITIALIZE NEURAL LINK"
 initBtn.addEventListener('click', () => {
     // Fade out boot overlay, reveal main HUD
     initOverlay.style.opacity = '0';
@@ -81,15 +46,15 @@ initBtn.addEventListener('click', () => {
         hudContainer.classList.remove('hidden');
     }, 800);
 
-    // Ensure local background video is playing
-    if (bgVideo && typeof bgVideo.play === 'function') {
-        bgVideo.play().catch(err => console.log('Video play error:', err));
-    }
-
-    // Play YT music if loaded
-    if (ytPlayer && typeof ytPlayer.playVideo === 'function') {
-        ytPlayer.playVideo();
-        ytPlayer.unMute();
+    // Play local audio track
+    if (localAudio) {
+        localAudio.play().then(() => {
+            isPlaying = true;
+            updatePlayPauseButton();
+            startVisualizer();
+        }).catch(err => {
+            console.log('Audio autoplay blocked or failed:', err);
+        });
     }
 
     // Launch background simulations
@@ -113,24 +78,31 @@ function startClock() {
     }, 1000);
 }
 
-// 3. Audio Controller Interactivity
+// 2. Audio Controller Interactivity
 playPauseBtn.addEventListener('click', () => {
-    if (!ytPlayer) return;
+    if (!localAudio) return;
     if (isPlaying) {
-        ytPlayer.pauseVideo();
+        localAudio.pause();
+        isPlaying = false;
+        updatePlayPauseButton();
+        stopVisualizer();
     } else {
-        ytPlayer.playVideo();
+        localAudio.play().then(() => {
+            isPlaying = true;
+            updatePlayPauseButton();
+            startVisualizer();
+        }).catch(err => console.log('Audio play error:', err));
     }
 });
 
 muteBtn.addEventListener('click', () => {
-    if (!ytPlayer) return;
+    if (!localAudio) return;
     if (isMuted) {
-        ytPlayer.unMute();
+        localAudio.muted = false;
         isMuted = false;
         muteIcon.innerHTML = `<path fill="currentColor" d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.85 14,18.71V20.77C18.03,19.86 21,16.28 21,12C21,7.72 18.03,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.77 16.5,12M3,9V15H7L12,20V4L7,9H3Z" />`;
     } else {
-        ytPlayer.mute();
+        localAudio.muted = true;
         isMuted = true;
         muteIcon.innerHTML = `<path fill="currentColor" d="M12,4L9.91,6.09L12,8.18M4.27,3L3,4.27L7.73,9H3V15H7L12,20V13.27L16.25,17.53C15.58,18.04 14.83,18.46 14,18.7V20.77C15.38,20.44 16.63,19.79 17.68,18.95L20.73,22L22,20.73M19,12C19,12.91 18.81,13.77 18.47,14.56L19.97,16.06C20.62,14.83 21,13.46 21,12C21,7.72 18.03,4.14 14,3.23V5.29C16.89,6.15 19,8.83 19,12M16.5,12C16.5,11.23 16.16,10.55 15.61,10.08L16.89,11.37C16.96,11.57 17,11.78 17,12C17,13.77 16,15.29 14.5,16V13.56L16.5,15.56V12M12,4V8.18L10.5,6.68L12,5.18V4Z" />`;
     }
@@ -139,8 +111,8 @@ muteBtn.addEventListener('click', () => {
 volumeRange.addEventListener('input', (e) => {
     const vol = e.target.value;
     volPctEl.textContent = `${vol}%`;
-    if (ytPlayer && typeof ytPlayer.setVolume === 'function') {
-        ytPlayer.setVolume(vol);
+    if (localAudio) {
+        localAudio.volume = vol / 100;
     }
 });
 
@@ -154,7 +126,7 @@ function updatePlayPauseButton() {
     }
 }
 
-// 4. Fake Audio visualizer animation while playing
+// 3. Fake Audio visualizer animation while playing
 let visInterval;
 function startVisualizer() {
     if (visInterval) clearInterval(visInterval);
@@ -177,27 +149,29 @@ function stopVisualizer() {
 
 // Keyboard shortcuts for Volume / Play Pause
 window.addEventListener('keydown', (e) => {
-    if (!ytPlayer) return;
     if (e.code === 'Space') {
         e.preventDefault();
-        if (isPlaying) ytPlayer.pauseVideo();
-        else ytPlayer.playVideo();
+        playPauseBtn.click();
     } else if (e.code === 'ArrowUp') {
         e.preventDefault();
         let vol = Math.min(parseInt(volumeRange.value) + 5, 100);
         volumeRange.value = vol;
         volPctEl.textContent = `${vol}%`;
-        ytPlayer.setVolume(vol);
+        if (localAudio) {
+            localAudio.volume = vol / 100;
+        }
     } else if (e.code === 'ArrowDown') {
         e.preventDefault();
         let vol = Math.max(parseInt(volumeRange.value) - 5, 0);
         volumeRange.value = vol;
         volPctEl.textContent = `${vol}%`;
-        ytPlayer.setVolume(vol);
+        if (localAudio) {
+            localAudio.volume = vol / 100;
+        }
     }
 });
 
-// 5. Interactive Tabs switching
+// 4. Interactive Tabs switching
 tabButtons.forEach(btn => {
     btn.addEventListener('click', () => {
         // Remove active class from all buttons and tabs
@@ -214,7 +188,7 @@ tabButtons.forEach(btn => {
     });
 });
 
-// 6. Cyberpunk Console Terminal Log dynamic printer
+// 5. Cyberpunk Console Terminal Log dynamic printer
 function addTerminalLine(text, type = 'info') {
     const timestamp = new Date().toLocaleTimeString().split(' ')[0];
     const prefix = `[${timestamp}] `;
@@ -238,7 +212,7 @@ function startConsoleBootLogs() {
     setTimeout(() => addTerminalLine('NET_INFRA: TUNNEL STABLE // ENCRYPTION AES-256', 'info'), 900);
 }
 
-// 7. FiveM Loader Event Hook implementation
+// 6. FiveM Loader Event Hook implementation
 const handlers = {
     startInitFunctionOrder(data) {
         addTerminalLine(`INIT ORDER: STARTING ORDER [${data.type}]`, 'system');
@@ -271,8 +245,12 @@ window.addEventListener('message', function(e) {
 function updateProgress(pct) {
     if (pct < progress) return; // Prevent progress regression
     progress = pct;
-    progressBarFill.style.width = `${progress}%`;
-    loadPercentageEl.textContent = `${progress}%`;
+    if (progressBarFill) {
+        progressBarFill.style.width = `${progress}%`;
+    }
+    if (loadPercentageEl) {
+        loadPercentageEl.textContent = `${progress}%`;
+    }
 
     // Dynamic load stage text update based on percentage
     if (progress < 20) {
@@ -288,7 +266,7 @@ function updateProgress(pct) {
     }
 }
 
-// 8. Simulated Loader for general browser previews
+// 7. Simulated Loader for general browser previews
 const simulatedResources = [
     'core/system_init.cfg',
     'qbox-core/client/main.lua',
