@@ -9,17 +9,13 @@ def run_cuj(page):
     page.goto(f"file://{html_path}")
     page.wait_for_timeout(1000)
 
-    # Screenshot the initial "SYSTEM OFFLINE" boot screen
+    # Screenshot the initial direct-loaded HUD on top of the live video background
     page.screenshot(path="/home/jules/verification/screenshots/boot_screen.png")
-    page.wait_for_timeout(500)
+    page.wait_for_timeout(1500)
 
-    # Click the "INITIALIZE NEURAL LINK" button
-    init_btn = page.locator("#init-btn")
-    init_btn.click()
+    # Click the body or some element to interact and activate audio playback
+    page.click("body")
     page.wait_for_timeout(1000)
-
-    # The HUD should transition in and simulate loading progress
-    # We wait a few seconds to let progress increase, click some tabs
 
     # Click rules tab
     rules_btn = page.locator("button[data-tab='rules']")
@@ -38,7 +34,7 @@ def run_cuj(page):
     lore_btn.click()
 
     # Wait for the loading simulation to get near 100%
-    page.wait_for_timeout(5000)
+    page.wait_for_timeout(4000)
     page.screenshot(path="/home/jules/verification/screenshots/verification.png")
     page.wait_for_timeout(1000)
 

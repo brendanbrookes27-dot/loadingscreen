@@ -11,8 +11,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Background image element with Ken Burns animation -->
-    <div id="bg-image" class="bg-image"></div>
+    <!-- Background video element playing FiveM looping cinematography -->
+    <video id="bg-video" class="bg-video" autoplay loop muted playsinline>
+        <source src="assets/background.mp4" type="video/mp4">
+    </video>
 
     <!-- Background overlay / Scanlines / Cyberpunk Grid -->
     <div class="cyber-overlay"></div>
@@ -22,27 +24,8 @@
     <!-- Local HTML5 Audio Element -->
     <audio id="local-audio" src="assets/music.mp3" loop></audio>
 
-    <!-- Audio Autoplay Bypasser/Init Overlay -->
-    <div id="init-overlay" class="init-overlay">
-        <div class="init-box">
-            <div class="glitch-text" data-text="SYSTEM OFFLINE">SYSTEM OFFLINE</div>
-            <p class="init-subtitle">HARD YAKKA RECRUITMENT NODE v1.02</p>
-            <div class="init-bracket-container">
-                <button id="init-btn" class="cyber-btn">
-                    <span class="btn-text">INITIALIZE NEURAL LINK</span>
-                    <span class="btn-glitch-border"></span>
-                </button>
-            </div>
-            <div class="init-status-scroller">
-                <span class="scroller-line">> INITIALIZING HOST CONNECTION...</span>
-                <span class="scroller-line">> ESTABLISHING SECURE PROTOCOLS...</span>
-                <span class="scroller-line">> RETRIEVING ENCRYPTED DATA...</span>
-            </div>
-        </div>
-    </div>
-
     <!-- Main HUD Container -->
-    <div class="hud-container hidden" id="hud-container">
+    <div class="hud-container" id="hud-container">
         <!-- HEADER -->
         <header class="hud-header">
             <div class="header-left">

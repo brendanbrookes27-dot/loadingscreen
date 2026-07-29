@@ -13,5 +13,6 @@ files {
     'web/js/app.js',
     'web/assets/logo.png',
     'web/assets/background.jpg',
+    'web/assets/background.mp4',
     'web/assets/music.mp3'
 }

@@ -11,9 +11,7 @@ let progress = 0;
 let simulatedInterval;
 
 // Select DOM elements
-const initOverlay = document.getElementById('init-overlay');
-const initBtn = document.getElementById('init-btn');
-const bgImage = document.getElementById('bg-image');
+const bgVideo = document.getElementById('bg-video');
 const localAudio = document.getElementById('local-audio');
 const hudContainer = document.getElementById('hud-container');
 const currentTimeEl = document.getElementById('current-time');
@@ -37,29 +35,41 @@ if (localAudio) {
     localAudio.volume = 0.5;
 }
 
-// 1. Setup System Boot and Audio initialization on clicking "INITIALIZE NEURAL LINK"
-initBtn.addEventListener('click', () => {
-    // Fade out boot overlay, reveal main HUD
-    initOverlay.style.opacity = '0';
-    setTimeout(() => {
-        initOverlay.style.display = 'none';
-        hudContainer.classList.remove('hidden');
-    }, 800);
-
-    // Play local audio track
+// Attempt to play audio immediately
+function attemptPlayAudio() {
     if (localAudio) {
         localAudio.play().then(() => {
             isPlaying = true;
             updatePlayPauseButton();
             startVisualizer();
+            addTerminalLine('DECK_AUDIO_TUNER: SYSTEM LINK ESTABLISHED - PLAYING STEREO DECK', 'success');
         }).catch(err => {
-            console.log('Audio autoplay blocked or failed:', err);
+            console.log('Audio autoplay blocked, waiting for user gesture:', err);
+            addTerminalLine('DECK_AUDIO_TUNER: AUDIO STREAM PAUSED [WAITING FOR USER INTERACTION GESTURE]', 'warning');
         });
     }
+}
 
-    // Launch background simulations
+// 1. Setup System Boot and Audio initialization on load
+window.addEventListener('DOMContentLoaded', () => {
+    // Launch background simulations immediately
     startClock();
     startConsoleBootLogs();
+
+    // Attempt to autoplay audio immediately
+    attemptPlayAudio();
+
+    // Register a global click/interaction listener to bypass browser autoplay blocks
+    // Anytime the user clicks anywhere on the screen, it triggers or unmutes the audio
+    const interactionEvents = ['click', 'mousedown', 'keydown', 'touchstart'];
+    const triggerAudio = () => {
+        if (!isPlaying && localAudio) {
+            attemptPlayAudio();
+        }
+        // Once played or on first interaction, we can remove these listeners to save resources
+        interactionEvents.forEach(evt => document.body.removeEventListener(evt, triggerAudio));
+    };
+    interactionEvents.forEach(evt => document.body.addEventListener(evt, triggerAudio));
 
     // If not in actual FiveM loadscreen context, run browser simulated loading progress
     if (!window.nuiHandoverData && !navigator.userAgent.includes('FiveM')) {
